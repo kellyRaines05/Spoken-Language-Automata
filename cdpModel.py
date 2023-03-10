@@ -4,7 +4,6 @@
 
 from buttonFunctions import colorResultButtons
 
-
 # TODO: translation function
 def getTranslation(text):
     phonemeList = ["t","ʌ","b"]

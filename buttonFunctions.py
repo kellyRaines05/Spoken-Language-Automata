@@ -46,7 +46,7 @@ def placePhoneme(vowelBox, consonantBox):
                 break
 
 # highlight the buttons that are in the particular language
-def highlightButtons(dropDown):
+def highlightButtons(event):
     # create a list for each of the phonemes from the IPA that are included in each particular language
     englishPhoneme = ["p","b","t","d","k","ɡ","m","n","ŋ","f","v","θ","ð","s","z","ʃ","ʒ","tʃ","dʒ",
                     "w","h","ɹ","j","l","i","u","ɪ","ʊ","ə","ɛ","ɔ","æ","ɑ","ɒ","e","ʌ"]
@@ -59,20 +59,18 @@ def highlightButtons(dropDown):
     for button in buttonList:
         button.configure(bg = "white")
         
-        if dropDown.get() == "English":
+        if event.widget.get() == "English":
             for letter in englishPhoneme:
                 if button["text"] == letter:
                     button.configure(bg = "yellow")
-        if dropDown.get() == "French":
+        if event.widget.get() == "French":
             for letter in frenchPhoneme:
                 if button["text"] == letter:
                     button.configure(bg = "yellow")
-        if dropDown.get() == "German":
+        if event.widget.get() == "German":
             for letter in germanPhoneme:
                 if button["text"] == letter:
                     button.configure(bg = "yellow")
-
-    print("DONE")
 
 def colorResultButtons(phonemes):
     colorButtonList = []
@@ -82,6 +80,7 @@ def colorResultButtons(phonemes):
                 colorButtonList.append(button)
 
     for button in colorButtonList:
-        #add delay here
+        time.sleep(1)
         button.configure(bg = "green")
+        button.update()
         button.invoke()
