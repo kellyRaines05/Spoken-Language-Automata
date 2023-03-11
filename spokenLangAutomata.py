@@ -8,35 +8,33 @@ from tkinter import ttk
 from buttonFunctions import *
 from cdpModel import *
 
-# functions after pressing the "GO" button
-def start():
+# verify input and selection after pressing the "GO" button
+def verification():
     resultMessage.config(text = "")
+    error = False
 
     # verify valid drop down selection
     if dropDown.get() == "Select Language...":
-        resultMessage.config(text = "Please select a language.")
-        resultMessage.grid(row = 2, column = 0, pady = 5)
-        resultMessage.config(fg = "red")
-        return
+        error = True
+    
     inputWord = input.get("1.0", END)
     inputWord = inputWord.strip()
 
     # verify valid input string
-    error = False
-    if (inputWord.find(" ") != -1 or len(inputWord) == 0):
+    if (len(inputWord) == 0 or len(inputWord) > 15 or inputWord.isalpha() == False):
         error = True
 
     if error:
-        resultMessage.config(text = "Please enter only 1 word.")
+        resultMessage.config(text = "Please enter only 1 word less than 15 characters (only letters).")
         resultMessage.grid(row = 2, column = 0, pady = 5)
         resultMessage.config(fg = "red")
         return
-
-    resultMessage.grid(row = 2, column = 0, pady = 5)
-    resultMessage.config(fg = "green")
-
+    
+    # start translation
     result = getTranslation(text = inputWord)
     resultMessage.config(text = result)
+    resultMessage.grid(row = 2, column = 0, pady = 5)
+    resultMessage.config(fg = "green")
 
 
 # root pane
@@ -113,7 +111,7 @@ Label(topBox, text = "Please enter a word: ", font = "Times 12 bold").grid(row =
 resultMessage = Label(topBox, text = "", font = "Times 15 bold")
 
 # user input
-input = Text(topBox, height = 1, width = 80)
+input = Entry(topBox, width = 80)
 input.insert(END, "Type here...")
 input.grid(row = 1, column = 0, padx = 5)
 
@@ -123,10 +121,10 @@ dropDown.set("Select Language...")
 dropDown.grid(row = 1, column = 1, padx = 5)
 dropDown.bind("<<ComboboxSelected>>", highlightButtons)
 
-
 # button initiates machine
-enterButton = Button(topBox, text = "GO", command = start)
+enterButton = Button(topBox, text = "GO", command = verification)
 enterButton.grid(row = 1, column = 2, padx = 5, ipadx = 10)
+root.bind("<Return>", verification)
 
 # phoneme (vowel and consonant box) contents
 Label(vowelBox, text = "Vowel Phonemes", font = "Times 15 bold").grid(row = 0, column = 2, pady = 5, columnspan = 3)
