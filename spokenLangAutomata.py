@@ -4,9 +4,9 @@
 # pronounciation of a word.
 
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from buttonFunctions import *
-from cdpModel import *
+from predict import *
 
 # verify input and selection after pressing the "GO" button
 def verification():
@@ -17,7 +17,7 @@ def verification():
     if dropDown.get() == "Select Language...":
         error = True
     
-    inputWord = input.get("1.0", END)
+    inputWord = input.get()
     inputWord = inputWord.strip()
 
     # verify valid input string
@@ -25,13 +25,19 @@ def verification():
         error = True
 
     if error:
-        resultMessage.config(text = "Please enter only 1 word less than 15 characters (only letters).")
+        resultMessage.config(text = "Please enter only 1 word less than 15 characters (only letters) and language must be selected.")
         resultMessage.grid(row = 2, column = 0, pady = 5)
         resultMessage.config(fg = "red")
         return
     
     # start translation
-    result = getTranslation(text = inputWord)
+    encodedInput = encodeUserInput(inputWord, dropDown.get())
+    result = predict(encodedInput, dropDown.get())
+
+    if len(result) == 0:
+        messagebox.showerror("ERROR", "Error translating word to IPA. Please try again later.")
+        return
+    colorResultButtons(result)
     resultMessage.config(text = result)
     resultMessage.grid(row = 2, column = 0, pady = 5)
     resultMessage.config(fg = "green")
@@ -112,7 +118,7 @@ resultMessage = Label(topBox, text = "", font = "Times 15 bold")
 
 # user input
 input = Entry(topBox, width = 80)
-input.insert(END, "Type here...")
+input.insert(0, "Type here...")
 input.grid(row = 1, column = 0, padx = 5)
 
 # drop down
